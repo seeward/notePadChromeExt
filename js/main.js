@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 var currentNote = "defaultNoteName";
-
+var data = {};
     function init() {
         $("#msg").hide();
         if (window.localStorage.getItem("saved")) {
@@ -39,11 +39,15 @@ var currentNote = "defaultNoteName";
 
     $("#remember").click(function() {
         $("#noteList").hide();
-        data = {};
+        
         savedTxt = document.getElementById("txtBody").value;
         data.note = savedTxt;
-        data.key = prompt("Name this Note:");
-        if (data.key != null) {
+        if (navigator.userAgent.indexOf('Mac OS X') != -1) {
+            $("#space").html("<div style='margin-top:10px'><input class='form-control' type='text' id='noteName' style='float:left'/><a id='saveName' class='btn btn-small btn-success'>Save</a></div>");
+            
+        } else {
+            data.key = window.prompt("Name this Note:");
+                    if (data.key != null) {
             window.localStorage.setItem(data.key, JSON.stringify(data));
         }
 
@@ -51,16 +55,34 @@ var currentNote = "defaultNoteName";
         $("#msg").html("Note contents saved.");
         setTimeout(function() {
             $("#msg").hide();
-
+            data = {};
             getSaved();
         }, 1000);
+        }
+        
+
     });
 
 
 
 
 
+$("#space").on("click","a",function(){
+    data.key = $("#noteName").val();
 
+                    if (data.key != null) {
+            window.localStorage.setItem(data.key, JSON.stringify(data));
+        }
+
+        $("#msg").show();
+        $("#msg").html("Note contents saved.");
+        setTimeout(function() {
+            $("#msg").hide();
+            $("#space").html("");
+            data = {};
+            getSaved();
+        }, 1000);
+});
 
 
 
